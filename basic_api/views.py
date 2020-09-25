@@ -8,8 +8,42 @@ from .serializers import ArticleSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework import generics
+from rest_framework import mixins
 # Create your views here.
 
+
+## GENERIC VIEW ##
+
+
+class GenericeApiListView(generics.GenericAPIView, mixins.ListModelMixin,mixins.CreateModelMixin):
+    serializer_class = ArticleSerializer
+    queryset = Article.objects.all()
+
+ 
+
+    def get(self,request):
+        return self.list(request)
+
+    def post(self,request):
+        return self.create(request)
+
+class GenericAPIDetailView(generics.GenericAPIView, mixins.RetrieveModelMixin,mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+    serializer_class = ArticleSerializer
+    queryset = Article.objects.all()
+
+    lookup_field = 'id'
+
+    def get(self,request, id):
+        return self.retrieve(request)
+
+    def put(self,request,id):
+        return self.update(request)
+    
+    def delete(self,request,id):
+        return self.destroy(request)
+
+## CLASS BASED VIEW (APIVIEW)
 class ArticleListView(APIView):
 
     def get(self,request):
