@@ -10,6 +10,8 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework import mixins
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication,TokenAuthentication
+from rest_framework.permissions import IsAuthenticated 
 # Create your views here.
 
 
@@ -20,7 +22,9 @@ class GenericeApiListView(generics.GenericAPIView, mixins.ListModelMixin,mixins.
     serializer_class = ArticleSerializer
     queryset = Article.objects.all()
 
- 
+    # authentication_classes = [SessionAuthentication, BasicAuthentication]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self,request):
         return self.list(request)
@@ -31,8 +35,11 @@ class GenericeApiListView(generics.GenericAPIView, mixins.ListModelMixin,mixins.
 class GenericAPIDetailView(generics.GenericAPIView, mixins.RetrieveModelMixin,mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     serializer_class = ArticleSerializer
     queryset = Article.objects.all()
-
     lookup_field = 'id'
+    # authentication_classes = [SessionAuthentication, BasicAuthentication]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
 
     def get(self,request, id):
         return self.retrieve(request)
